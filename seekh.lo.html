@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seekh.Lo - AI Learning Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --secondary: #564dff;
+            --accent: #8a85ff;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f9fa;
+            --gray: #2a2a2a;
+            --text-light: #e0e0e0;
+            --text-lighter: #ffffff;
+            --success: #4cc9f0;
+            --danger: #f72585;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background-color: var(--darker);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        nav a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--accent);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 5rem 10%;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-lighter);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-light);
+        }
+        
+        .features {
+            padding: 4rem 10%;
+            background-color: var(--darker);
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background-color: var(--gray);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #3a3a3a;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-lighter);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Quiz Generator Styles */
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: var(--gray);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .quiz-container h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-lighter);
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--darker);
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        select[multiple] {
+            height: 150px;
+        }
+        
+        /* Quiz Interface Styles */
+        .quiz-interface {
+            display: none;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #444;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .question-text {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            margin-bottom: 2rem;
+        }
+        
+        .option {
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background-color: var(--darker);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #333;
+        }
+        
+        .option input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Results Page Styles */
+        .results-container {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .results-container h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--success);
+            margin: 1rem 0;
+        }
+        
+        .max-score {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            opacity: 0;
+            animation: confetti 5s ease-in-out infinite;
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 5rem 10%;
+            background-color: var(--dark);
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--text-lighter);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            background-color: var(--gray);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #3a3a3a;
+        }
+        
+        .feature-item i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-lighter);
+        }
+        
+        footer {
+            background-color: var(--darker);
+            color: white;
+            padding: 3rem 10%;
+            text-align: center;
+            border-top: 1px solid var(--gray);
+        }
+        
+        footer p {
+            margin-top: 1.5rem;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .submit-btn {
+            background-color: var(--danger);
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: #d3166d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-lightbulb"></i>
+            Seekh.Lo
+        </div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Features</a>
+            <a href="#">How It Works</a>
+            <a href="#">Pricing</a>
+            <a href="#" class="btn btn-outline">Try Now</a>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <h1>Struggling with challenging questions and doubts?</h1>
+        <p>Welcome to Seekh.Lo - Your AI-powered learning companion that helps you understand concepts, solve problems, and achieve academic excellence.</p>
+        <a href="#" class="btn">Get Started for Free</a>
+    </section>
+    
+    <section class="features">
+        <div class="features-container">
+            <div class="feature-card" id="quiz-generator-btn">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Questions Generator</h3>
+                <p>Generate practice questions by topic, from a photo of your textbook page, or by chapter to test your understanding.</p>
+                <a href="#" class="btn">Try It Now</a>
+            </div>
+            
+            <div class="feature-card" onclick="window.location.href='doubt-solver.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3>AI Doubt Solver</h3>
+                <p>Get instant solutions to your doubts by uploading a picture or typing your question. Supports math, science, and more.</p>
+                <a href="#" class="btn">Solve My Doubt</a>
+            </div>
+            
+            <div class="feature-card" onclick="window.location.href='ai-teacher.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3>AI Teacher</h3>
+                <p>Learn concepts intuitively with relatable examples, interactive graphs, photos, maps, and step-by-step explanations.</p>
+                <a href="#" class="btn">Start Learning</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quiz Generator Section -->
+    <div class="quiz-container" id="quiz-setup">
+        <h2><i class="fas fa-robot"></i> JEE Quiz Generator</h2>
+        
+        <div class="form-group">
+            <label for="subject">Select Subject</label>
+            <select id="subject">
+                <option value="">Select One</option>
+                <option value="maths"><i class="fas fa-square-root-alt"></i> Mathematics</option>
+                <option value="physics"><i class="fas fa-atom"></i> Physics</option>
+                <option value="chemistry"><i class="fas fa-flask"></i> Chemistry</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="time">Select Time (minutes)</label>
+            <select id="time">
+                <option value="">Select One</option>
+                <option value="10">10 mins</option>
+                <option value="20">20 mins</option>
+                <option value="30">30 mins</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="chapters-group">
+            <label for="chapters">Select Chapters (One or More)</label>
+            <select id="chapters" multiple>
+                <!-- Chapters will be populated based on subject selection -->
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Select Question Types (One or More)</label>
+            <div class="options">
+                <label><input type="checkbox" name="question-type" value="mcq" checked> Multiple Choice Questions</label>
+                <label><input type="checkbox" name="question-type" value="msq"> Multiple Correct Questions</label>
+                <label><input type="checkbox" name="question-type" value="integer"> Integer Type</label>
+            </div>
+        </div>
+        
+        <button class="btn" id="generate-btn">Generate Quiz</button>
+    </div>
+    
+    <!-- Quiz Interface -->
+    <div class="quiz-container quiz-interface" id="quiz-interface">
+        <div class="timer" id="timer">Time: 20:00</div>
+        
+        <div class="question-header">
+            <div class="question-number">Question <span id="current-q">1</span></div>
+            <div class="marks">Marks: +4</div>
+        </div>
+        
+        <div class="question-text" id="question-text">
+            <!-- Question will be inserted here -->
+        </div>
+        
+        <div class="options" id="options-container">
+            <!-- Options will be inserted here -->
+        </div>
+        
+        <div class="navigation-buttons">
+            <button class="nav-btn" id="prev-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button class="nav-btn submit-btn" id="submit-btn">Submit Quiz</button>
+            <button class="nav-btn" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+    
+    <!-- Results Page -->
+    <div class="quiz-container results-container" id="results-container">
+        <h2>Congratulations on completing the test!</h2>
+        <div class="score" id="score">24</div>
+        <div class="max-score">out of <span id="max-score">40</span></div>
+        <p>You've demonstrated great knowledge in this subject!</p>
+        <button class="btn" id="retry-btn">Try Another Quiz</button>
+    </div>
+    
+    <!-- Celebration Animation -->
+    <div class="celebration" id="celebration"></div>
+    
+    <section class="features-section">
+        <div class="section-title">
+            <h2>Why Choose Seekh.Lo?</h2>
+            <p>Our AI-powered platform combines multiple advanced models to give you the most accurate and helpful learning experience.</p>
+        </div>
+        
+        <div class="feature-list">
+            <div class="feature-item">
+                <i class="fas fa-camera"></i>
+                <h3>Snap & Solve</h3>
+                <p>Just take a picture of your homework problems and get accurate solutions instantly with our advanced image recognition.</p>
+            </div>
+            
+            <div class="feature-item">
+                <i class="fas fa-comments"></i>
+                <h3>24/7 AI Chat</h3>
+                <p>Chat with our AI tutor anytime, anywhere. Upload PDFs or documents for instant analysis and explanations.</p>
+            </div>
+            
+            <div class="feature-item">
+                <i class="fas fa-clock"></i>
+                <h3>Save Time</h3>
+                <p>Get instant solutions and focus on what matters most. Spend less time struggling and more time learning effectively.</p>
+            </div>
+            
+            <div class="feature-item">
+                <i class="fas fa-unlock"></i>
+                <h3>Free Access</h3>
+                <p>No sign-up required. Get unblocked answers and premium features without any restrictions or hidden costs.</p>
+            </div>
+            
+            <div class="feature-item">
+                <i class="fas fa-list-ol"></i>
+                <h3>Step-by-Step</h3>
+                <p>Detailed explanations for every solution so you don't just get answers - you actually learn and understand.</p>
+            </div>
+            
+            <div class="feature-item">
+                <i class="fas fa-globe"></i>
+                <h3>Global Community</h3>
+                <p>Join students worldwide, share knowledge, and get verified answers from experts across different subjects.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="logo">
+            <i class="fas fa-lightbulb"></i>
+            Seekh.Lo
+        </div>
+        <p>&copy; 2025 Seekh.Lo. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Brand name changed to Seekh.Lo
+        document.title = "Seekh.Lo - AI Learning Companion";
+        
+        // Subject-wise chapters
+        const subjects = {
+            maths: [
+                "Logarithm", 
+                "Complex Numbers", 
+                "Quadratic Equations",
+                "Coordinate Geometry",
+                "Arithmetic Progressions",
+                "Pair of Linear Equations",
+                "Polynomials",
+                "Triangles",
+                "Circles",
+                "Probability"
+            ],
+            physics: [
+                "Vectors", 
+                "Motion in a Straight Line", 
+                "Unit and Dimensions",
+                "Kinematics",
+                "Laws of Motion",
+                "Work, Energy and Power",
+                "Rotational Motion",
+                "Gravitation",
+                "Thermodynamics",
+                "Oscillations"
+            ],
+            chemistry: [
+                "Mole concept and Stoichiometry", 
+                "Atomic Structure", 
+                "Periodic Table",
+                "Chemical Bonding",
+                "States of Matter",
+                "Thermodynamics",
+                "Equilibrium",
+                "Redox Reactions",
+                "Hydrogen",
+                "s-Block Elements"
+            ]
+        };
+
+        // JEE Questions Database (expanded)
+        const questions = {
+            maths: [
+                {
+                    question: "If log₁₀2 = a and log₁₀3 = b, then log₁₀5 is equal to:",
+                    options: ["1 - a", "1 - b", "1 - a + b", "1 + a - b"],
+                    answer: 0,
+                    type: "mcq"
+                },
+                {
+                    question: "The roots of the quadratic equation x² - 4x + 5 = 0 are:",
+                    options: ["Real and equal", "Real and distinct", "Imaginary", "None of these"],
+                    answer: 2,
+                    type: "mcq"
+                },
+                {
+                    question: "The number of solutions of the equation sin x = x² + x + 1 is:",
+                    options: ["0", "1", "2", "Infinite"],
+                    answer: 0,
+                    type: "mcq"
+                },
+                {
+                    question: "If z is a complex number such that |z| = 1, then which of these is true?",
+                    options: ["z = 1/z", "z = -1/z", "z = z̅", "None of these"],
+                    answer: [0, 2],
+                    type: "msq"
+                }
+            ],
+            physics: [
+                {
+                    question: "If force (P), length (L) and time (T) are taken as the fundamental quantities, then what will be the dimension of density?",
+                    options: ["[FL⁻³T²]", "[FL⁻⁵T²]", "[FL⁻⁴T²]", "[FL⁻³T³]"],
+                    answer: 0,
+                    type: "mcq"
+                },
+                {
+                    question: "A particle moves along a straight line with velocity v = 3t² - 6t m/s. The displacement in first 2 seconds is:",
+                    options: ["0 m", "2 m", "4 m", "8 m"],
+                    answer: 0,
+                    type: "mcq"
+                },
+                {
+                    question: "Which of the following are vector quantities?",
+                    options: ["Work", "Torque", "Angular momentum", "Pressure"],
+                    answer: [1, 2],
+                    type: "msq"
+                }
+            ],
+            chemistry: [
+                {
+                    question: "The number of moles of oxygen atoms in 9.8 g of H₃PO₄ is:",
+                    options: ["0.1", "0.2", "0.3", "0.4"],
+                    answer: 3,
+                    type: "mcq"
+                },
+                {
+                    question: "Which of the following are isoelectronic species?",
+                    options: ["Na⁺", "Mg²⁺", "O²⁻", "F⁻"],
+                    answer: [0, 3],
+                    type: "msq"
+                },
+                {
+                    question: "The number of electrons in the valence shell of an element with atomic number 15 is:",
+                    options: ["3", "5", "7", "8"],
+                    answer: 1,
+                    type: "mcq"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const quizGeneratorBtn = document.getElementById('quiz-generator-btn');
+        const subjectSelect = document.getElementById('subject');
+        const chaptersSelect = document.getElementById('chapters');
+        const generateBtn = document.getElementById('generate-btn');
+        const quizSetup = document.getElementById('quiz-setup');
+        const quizInterface = document.getElementById('quiz-interface');
+        const resultsContainer = document.getElementById('results-container');
+        const timerElement = document.getElementById('timer');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQElement = document.getElementById('current-q');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const scoreElement = document.getElementById('score');
+        const maxScoreElement = document.getElementById('max-score');
+        const celebration = document.getElementById('celebration');
+
+        // Show quiz generator when AI Questions Generator card is clicked
+        quizGeneratorBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            quizSetup.style.display = 'block';
+            window.scrollTo({
+                top: quizSetup.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+
+        // Populate chapters based on subject selection
+        subjectSelect.addEventListener('change', function() {
+            const subject = this.value;
+            chaptersSelect.innerHTML = '';
+            
+            if (subject && subjects[subject]) {
+                subjects[subject].forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter.toLowerCase().replace(/ /g, '-');
+                    option.textContent = chapter;
+                    chaptersSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Quiz State
+        let currentQuestion = 0;
+        let quizQuestions = [];
+        let timeLeft = 0;
+        let timerInterval;
+        let userAnswers = [];
+        let score = 0;
+
+        // Generate Quiz
+        generateBtn.addEventListener('click', function() {
+            const subject = subjectSelect.value;
+            const time = parseInt(document.getElementById('time').value);
+            
+            if (!subject || !time) {
+                alert('Please select both subject and time');
+                return;
+            }
+            
+            // Calculate number of questions (time/2 minutes per question)
+            const numQuestions = Math.floor(time / 2);
+            
+            // Start quiz
+            startQuiz(subject, numQuestions, time);
+        });
+
+        function startQuiz(subject, numQuestions, timeMinutes) {
+            // Filter questions by subject (in real app, this would be more sophisticated)
+            quizQuestions = questions[subject] || [];
+            
+            // If not enough questions, duplicate some (for demo only)
+            while (quizQuestions.length < numQuestions) {
+                quizQuestions = quizQuestions.concat(questions[subject] || []);
+            }
+            quizQuestions = quizQuestions.slice(0, numQuestions);
+            
+            // Initialize user answers
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            
+            // Set up timer
+            timeLeft = timeMinutes * 60;
+            updateTimer();
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                }
+            }, 1000);
+            
+            // Show quiz interface
+            quizSetup.style.display = 'none';
+            quizInterface.style.display = 'block';
+            
+            // Load first question
+            showQuestion(0);
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function showQuestion(index) {
+            if (index < 0 || index >= quizQuestions.length) return;
+            
+            currentQuestion = index;
+            const question = quizQuestions[index];
+            
+            currentQElement.textContent = index + 1;
+            questionText.textContent = question.question;
+            
+            optionsContainer.innerHTML = '';
+            
+            if (question.type === 'integer') {
+                // Integer type question
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = 'integer-answer';
+                input.placeholder = 'Enter your answer';
+                if (userAnswers[index] !== null) {
+                    input.value = userAnswers[index];
+                }
+                input.addEventListener('change', function() {
+                    userAnswers[index] = this.value;
+                });
+                optionsContainer.appendChild(input);
+            } else {
+                // MCQ or MSQ
+                question.options.forEach((option, i) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const input = document.createElement('input');
+                    input.type = question.type === 'msq' ? 'checkbox' : 'radio';
+                    input.name = 'option';
+                    input.value = i;
+                    input.id = `option-${i}`;
+                    
+                    // Check if this option was previously selected
+                    if (userAnswers[index] !== null) {
+                        if (question.type === 'msq') {
+                            input.checked = userAnswers[index].includes(i);
+                        } else {
+                            input.checked = userAnswers[index] === i;
+                        }
+                    }
+                    
+                    input.addEventListener('change', function() {
+                        if (question.type === 'msq') {
+                            if (!userAnswers[index]) userAnswers[index] = [];
+                            if (this.checked) {
+                                userAnswers[index].push(i);
+                            } else {
+                                userAnswers[index] = userAnswers[index].filter(item => item !== i);
+                            }
+                        } else {
+                            userAnswers[index] = i;
+                        }
+                    });
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `option-${i}`;
+                    label.textContent = option;
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsContainer.appendChild(optionDiv);
+                });
+            }
+            
+            // Update button states
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === quizQuestions.length - 1;
+        }
+
+        prevBtn.addEventListener('click', function() {
+            showQuestion(currentQuestion - 1);
+        });
+
+        nextBtn.addEventListener('click', function() {
+            showQuestion(currentQuestion + 1);
+        });
+
+        submitBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to submit the quiz?')) {
+                submitQuiz();
+            }
+        });
+
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            score = 0;
+            quizQuestions.forEach((question, index) => {
+                if (userAnswers[index] === null) return;
+                
+                if (question.type === 'msq') {
+                    // For multiple correct questions, award 4 marks if all correct, -1 for any wrong
+                    const correctAnswers = JSON.stringify(question.answer.sort());
+                    const userAnswer = JSON.stringify(userAnswers[index].sort());
+                    if (correctAnswers === userAnswer) {
+                        score += 4;
+                    } else if (userAnswers[index].length > 0) {
+                        score -= 1;
+                    }
+                } else {
+                    // For single correct and integer type
+                    if (userAnswers[index] == question.answer) {
+                        score += 4;
+                    } else if (userAnswers[index] !== null) {
+                        score -= 1;
+                    }
+                }
+            });
+            
+            // Ensure score doesn't go below 0
+            score = Math.max(0, score);
+            
+            // Show results
+            quizInterface.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            scoreElement.textContent = score;
+            maxScoreElement.textContent = quizQuestions.length * 4;
+            
+            // Show celebration
+            showCelebration();
+        }
+
+        function showCelebration() {
+            celebration.style.display = 'block';
+            
+            // Create confetti
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                celebration.appendChild(confetti);
+            }
+            
+            // Add animation class to results
+            resultsContainer.classList.add('animate__animated', 'animate__bounceIn');
+        }
+
+        retryBtn.addEventListener('click', function() {
+            // Reset everything
+            celebration.style.display = 'none';
+            celebration.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            quizSetup.style.display = 'block';
+            window.scrollTo({
+                top: quizSetup.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
